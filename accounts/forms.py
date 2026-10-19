@@ -2,6 +2,8 @@ from django import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 
+from .models import Community
+
 User = get_user_model()
 
 
@@ -29,3 +31,19 @@ class RegistrationForm(BootstrapFormMixin, UserCreationForm):
 
 class LoginForm(BootstrapFormMixin, AuthenticationForm):
     pass
+
+
+class CommunityForm(BootstrapFormMixin, forms.ModelForm):
+    """Only the name is typed by the user. The admin is set in the view."""
+
+    class Meta:
+        model = Community
+        fields = ["name"]
+        labels = {"name": "Community name"}
+
+
+class JoinCommunityForm(BootstrapFormMixin, forms.Form):
+    join_code = forms.CharField(max_length=12, label="Community join code")
+
+    def clean_join_code(self):
+        return self.cleaned_data["join_code"].strip().upper()
