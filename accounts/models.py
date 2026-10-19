@@ -24,7 +24,7 @@ class User(AbstractUser):
 
 def generate_join_code(length=8):
     """Random, hard-to-guess code such as 'K7QX2M9A' (no look-alike characters)."""
-    alphabet = "CcijrCfZBuqDzBWp3qSrBEZCqBUfQVz4CWGHWF91iaEw"
+    alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789"
     return "".join(secrets.choice(alphabet) for _ in range(length))
 
 
