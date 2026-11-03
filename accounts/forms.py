@@ -47,3 +47,29 @@ class JoinCommunityForm(BootstrapFormMixin, forms.Form):
 
     def clean_join_code(self):
         return self.cleaned_data["join_code"].strip().upper()
+
+
+MAX_AVATAR_SIZE = 2 * 1024 * 1024  # 2 MB
+ALLOWED_AVATAR_FORMATS = ("JPEG", "PNG", "GIF", "WEBP")
+
+
+class AvatarForm(BootstrapFormMixin, forms.ModelForm):
+    """Upload or replace the logged-in user's profile photo."""
+
+    avatar = forms.ImageField(
+        label="Choose a photo",
+        widget=forms.FileInput(attrs={"accept": "image/png,image/jpeg,image/gif,image/webp"}),
+    )
+
+    class Meta:
+        model = User
+        fields = ["avatar"]
+
+    def clean_avatar(self):
+        image = self.cleaned_data["avatar"]
+        if image.size > MAX_AVATAR_SIZE:
+            raise forms.ValidationError("The photo must be 2 MB or smaller.")
+        # Pillow has already opened the file, so this is the real format, not just the name.
+        if getattr(getattr(image, "image", None), "format", None) not in ALLOWED_AVATAR_FORMATS:
+            raise forms.ValidationError("Use a JPG, PNG, GIF or WEBP image.")
+        return image
