@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block title %}Chat with {{ other.username }}{% endblock %}
+
+{% block body_class %}conversation-screen{% endblock %}
+
+{% block content %}
+<section class="conversation-page" aria-label="Conversation with {{ other.username }}">
+  <a href="{% url 'messaging:inbox' %}" class="chat-back">
+    <i class="bi bi-arrow-left"></i> Back to inbox
+  </a>
+
+  <header class="conversation-heading">
+    <h1>{{ other.username }}</h1>
+  </header>
+
+  <a href="{% url 'newsfeed:post_detail' post.pk %}" class="chat-item-summary text-decoration-none">
+    <span class="badge-group">
+      <span class="badge {% if post.type == 'found' %}badge-found{% else %}badge-lost{% endif %}">
+        {{ post.get_type_display }}
+      </span>
+    </span>
+    <strong class="chat-item-title text-body">
+      {{ post.caption|truncatechars:70 }}
+    </strong>
+  </a>
+
+  <div class="chat-box" id="chatBox" data-request-id="{{ contact.pk }}" aria-live="polite">
+    {% for message in chat %}
+      {% if message.message_type == 'system' %}
+        <div class="chat-system">
+          <i class="bi bi-shield-check me-1"></i> {{ message.content }}
+        </div>
+      {% else %}
+        <div class="chat-row {% if message.sender_id == user.id %}mine{% else %}theirs{% endif %}">
+          <div class="chat-bubble">
+            <div>{{ message.content|linebreaksbr }}</div>
+            <div class="chat-meta">
+              <span>{{ message.created_at|date:"M d, H:i" }}</span>
+              {% if message.sender_id == user.id %}
+                <i class="bi bi-check2"></i>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      {% endif %}
+    {% empty %}
+      <div class="text-center text-muted my-auto chat-empty">
+        <i class="bi bi-chat-heart fs-1 text-primary-subtle d-block mb-2"></i>
+        <p class="mb-0">No messages yet. Say hello and coordinate the handover!</p>
+      </div>
+    {% endfor %}
+  </div>
+
+  <div class="chat-composer">
+  <form method="post" novalidate>
+    {% csrf_token %}
+    {% include "includes/form_fields.html" with form=form %}
+    <button type="submit" class="btn btn-primary">
+      <i class="bi bi-send-fill"></i> Send
+    </button>
+  </form>
+  </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  var box = document.getElementById("chatBox");
+  if (box) { box.scrollTop = box.scrollHeight; }
+</script>
+{% endblock %}
