@@ -4,6 +4,7 @@ import string
 import uuid
 
 from django.conf import settings
+
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
@@ -39,7 +40,9 @@ class User(AbstractUser):
         return self.is_superuser or self.role == self.Role.SUPERADMIN
 
     def __str__(self):
+
         return self.username
+
 
 
 def generate_join_code(length=8):
@@ -121,5 +124,3 @@ class Membership(models.Model):
 
     def __str__(self):
         return f"{self.user} in {self.community} ({self.role})"
-
-
