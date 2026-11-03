@@ -1,9 +1,19 @@
+import os
 import secrets
 import string
+import uuid
 
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+
+
+def avatar_upload_path(instance, filename):
+    """avatars/user_<id>/<random>.<ext>: the visitor's own file name is never used."""
+    extension = os.path.splitext(filename)[1].lower()
+    if extension not in (".jpg", ".jpeg", ".png", ".gif", ".webp"):
+        extension = ".jpg"
+    return f"avatars/user_{instance.pk}/{uuid.uuid4().hex}{extension}"
 
 
 class User(AbstractUser):
@@ -16,7 +26,17 @@ class User(AbstractUser):
     We only override email so it is required and unique.
     """
 
+    class Role(models.TextChoices):
+        MEMBER = "member", "Member"
+        SUPERADMIN = "superadmin", "Superadmin"
+
     email = models.EmailField(unique=True)
+    role = models.CharField(max_length=20, choices=Role.choices, default=Role.MEMBER)
+    avatar = models.ImageField(upload_to=avatar_upload_path, blank=True, null=True)
+
+    @property
+    def is_superadmin(self):
+        return self.is_superuser or self.role == self.Role.SUPERADMIN
 
     def __str__(self):
         return self.username
@@ -24,7 +44,7 @@ class User(AbstractUser):
 
 def generate_join_code(length=8):
     """Random, hard-to-guess code such as 'K7QX2M9A' (no look-alike characters)."""
-    alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789"
+    alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"
     return "".join(secrets.choice(alphabet) for _ in range(length))
 
 
@@ -101,3 +121,5 @@ class Membership(models.Model):
 
     def __str__(self):
         return f"{self.user} in {self.community} ({self.role})"
+
+
