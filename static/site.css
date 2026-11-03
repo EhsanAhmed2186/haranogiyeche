@@ -1,0 +1,17 @@
+/* Haranogiyeche shared styles. Keep all custom CSS here so pages stay consistent. */
+:root {
+  --brand: #1f5f8b;
+}
+
+.navbar-brand {
+  font-weight: 700;
+  letter-spacing: 0.3px;
+}
+
+.bg-brand {
+  background-color: var(--brand) !important;
+}
+
+main {
+  flex: 1;
+}
