@@ -27,7 +27,7 @@ class Post(models.Model):
     type = models.CharField(max_length=10, choices=PostType.choices)
     caption = models.TextField()
     location = models.CharField(max_length=255, default="")
-    image = image = models.ImageField(
+    image =models.ImageField(
     upload_to="post_images/%Y/%m/",
     storage=PrivateMediaStorage(),
     blank=True,
