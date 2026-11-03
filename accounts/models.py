@@ -1,12 +1,10 @@
-<<<<<<< Updated upstream
-=======
 import os
 import secrets
 import string
 import uuid
 
 from django.conf import settings
->>>>>>> Stashed changes
+
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
@@ -42,10 +40,9 @@ class User(AbstractUser):
         return self.is_superuser or self.role == self.Role.SUPERADMIN
 
     def __str__(self):
-<<<<<<< Updated upstream
+
         return self.username
-=======
-        return self.username
+
 
 
 def generate_join_code(length=8):
@@ -127,6 +124,3 @@ class Membership(models.Model):
 
     def __str__(self):
         return f"{self.user} in {self.community} ({self.role})"
-
-
->>>>>>> Stashed changes
