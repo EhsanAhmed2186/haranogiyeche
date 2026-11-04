@@ -22,4 +22,9 @@ urlpatterns = [
     path("communities/create/", views.create_community, name="create_community"),
     path("communities/join/", views.join_community, name="join_community"),
     path("communities/<int:pk>/", views.community_detail, name="community_detail"),
+    path(
+    "superadmin/",
+    views.superadmin_dashboard,
+    name="superadmin_dashboard"
+),
 ]
