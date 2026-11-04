@@ -92,17 +92,6 @@ python manage.py test
 
 To test one app: `python manage.py test newsfeed`.
 
-## Email (forgot password)
-
-By default the emails are **printed in the terminal** where `runserver` is running, so you can test the password reset with no email account. To send real emails (Gmail example), create an App password in your Google account, then set these in the same terminal before starting the server:
-
-```powershell
-$env:EMAIL_BACKEND="django.core.mail.backends.smtp.EmailBackend"
-$env:EMAIL_HOST_USER="yourname@gmail.com"
-$env:EMAIL_HOST_PASSWORD="your-16-character-app-password"
-python manage.py runserver
-```
-
 Never write the password into `settings.py` or commit it.
 
 ## Main pages
