@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Welcome to Haranogiyeche{% endblock %}
+
+{% block content %}
+<div class="landing-page">
+  <section class="hero-landing" aria-labelledby="hero-title">
+    <div class="hero-copy">
+      <span class="hero-eyebrow"><i class="bi bi-shield-check"></i> A safer way to find what matters</span>
+      <h1 id="hero-title">Lost something?<br><span>Let’s get it back.</span></h1>
+      <p>Find your community, share a lost or found item, and reconnect belongings with the people who miss them.</p>
+      <div class="hero-actions">
+        <a href="{% url 'community_list' %}" class="btn btn-primary btn-lg">Explore communities <i class="bi bi-arrow-up-right"></i></a>
+        <a href="{% url 'accounts:register' %}" class="btn btn-light btn-lg hero-secondary">Create an account</a>
+      </div>
+      <p class="hero-login">Already part of a community? <a href="{% url 'accounts:login' %}">Log in</a></p>
+    </div>
+    <div class="hero-visual" aria-label="Examples of items people may report">
+      <div class="hero-photo-caption"><i class="bi bi-heart-fill"></i><span>Small acts. Big reunions.</span></div>
+      <article class="hero-item-card hero-item-backpack">
+        <img src="{% static 'images/item-backpack.png' %}" alt="Illustration of a blue backpack">
+        <div><span class="item-kicker">A little more peace of mind</span><strong>Every item has a way home.</strong></div>
+      </article>
+      <article class="hero-item-card hero-item-wallet">
+        <img src="{% static 'images/item-wallet.png' %}" alt="Illustration of a brown wallet">
+        <div><span class="item-kicker">Lost something?</span><strong>Your community can help.</strong></div>
+      </article>
+    </div>
+  </section>
+
+  <div class="trust-strip" aria-label="Platform benefits">
+    <div><i class="bi bi-people-fill"></i><span><strong>Community-led</strong><small>Built around places you trust</small></span></div>
+    <div><i class="bi bi-patch-check-fill"></i><span><strong>Ownership verified</strong><small>Private questions protect claimants</small></span></div>
+    <div><i class="bi bi-chat-dots-fill"></i><span><strong>Reunite with care</strong><small>Secure messaging when approved</small></span></div>
+  </div>
+
+  <section class="how-section" aria-labelledby="how-title">
+    <div class="section-heading">
+      <span class="section-eyebrow">A simple path back</span>
+      <h2 id="how-title">From lost to found, together.</h2>
+      <p>Three thoughtful steps make it easier to help—and safer to claim.</p>
+    </div>
+    <div class="row g-3 g-lg-4">
+      <div class="col-md-4"><article class="how-step">
+        <div class="feature-icon-badge"><i class="bi bi-people-fill"></i></div>
+        <h3>Find your community</h3><p>Browse public communities or join a trusted group with an invitation code.</p>
+      </article></div>
+      <div class="col-md-4"><article class="how-step">
+        <div class="feature-icon-badge"><i class="bi bi-camera-fill"></i></div>
+        <h3>Share the details</h3><p>Post a clear description and photo so the right people can recognize an item.</p>
+      </article></div>
+      <div class="col-md-4"><article class="how-step">
+        <div class="feature-icon-badge"><i class="bi bi-shield-check"></i></div>
+        <h3>Verify and reconnect</h3><p>Answer private ownership questions before a secure conversation begins.</p>
+      </article></div>
+    </div>
+  </section>
+
+  {% if featured %}
+    <section class="featured-section" aria-labelledby="communities-title">
+      <div class="section-heading section-heading-row">
+        <div><span class="section-eyebrow">Better together</span><h2 id="communities-title">Communities making a difference</h2></div>
+        <a href="{% url 'community_list' %}" class="text-link">Explore all <i class="bi bi-arrow-right"></i></a>
+      </div>
+      <div class="row g-3">
+        {% for community in featured %}
+          <div class="col-md-6 col-lg-4">
+            <a class="community-card" href="{% url 'community_list' %}">
+              <span class="community-mark">{{ community.name|slice:":1"|upper }}</span>
+              <span class="community-info"><strong>{{ community.name }}</strong><small><i class="bi bi-people"></i> {{ community.member_count }} member{{ community.member_count|pluralize }}</small></span>
+              <i class="bi bi-arrow-up-right community-arrow"></i>
+            </a>
+          </div>
+        {% endfor %}
+      </div>
+    </section>
+  {% endif %}
+</div>
+{% endblock %}

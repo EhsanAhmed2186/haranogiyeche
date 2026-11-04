@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}Superadmin dashboard{% endblock %}
+
+{% block content %}
+<section class="mb-4">
+  <span class="section-eyebrow">Platform controls</span>
+  <h1 class="h2">Superadmin dashboard</h1>
+  <p class="text-muted">Manage platform roles and open any community feed or members list.</p>
+</section>
+
+<div class="row g-3 mb-4">
+  <div class="col-md-6"><div class="card card-body"><span class="text-muted">Users</span><strong class="fs-3">{{ user_count }}</strong></div></div>
+  <div class="col-md-6"><div class="card card-body"><span class="text-muted">Communities</span><strong class="fs-3">{{ community_count }}</strong></div></div>
+</div>
+
+<div class="card mb-4">
+  <div class="card-header fw-semibold">Communities</div>
+  <div class="list-group list-group-flush">
+    {% for community in communities %}
+      <div class="list-group-item d-flex flex-wrap justify-content-between align-items-center gap-2">
+        <div><strong>{{ community.name }}</strong><div class="small text-muted">{{ community.member_count }} members · Admin: {{ community.admin.username }}</div></div>
+        <div class="d-flex gap-2">
+          <a class="btn btn-primary btn-sm" href="{% url 'newsfeed:feed' community.pk %}">Open feed</a>
+          <a class="btn btn-outline-secondary btn-sm" href="{% url 'accounts:community_detail' community.pk %}">Members</a>
+        </div>
+      </div>
+    {% empty %}<div class="list-group-item text-muted">No communities yet.</div>{% endfor %}
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header fw-semibold">Platform roles</div>
+  <div class="list-group list-group-flush">
+    {% for account in users %}
+      <div class="list-group-item d-flex flex-wrap justify-content-between align-items-center gap-2">
+        <span>{{ account.username }} <span class="text-muted">({{ account.email }})</span></span>
+        <span class="badge text-bg-secondary">{% if account.is_superadmin %}Superadmin{% else %}{{ account.get_role_display }}{% endif %}</span>
+        {% if account.pk != user.pk and not account.is_superuser %}
+          <form method="post">
+            {% csrf_token %}<input type="hidden" name="user_id" value="{{ account.pk }}">
+            <button type="submit" class="btn btn-sm {% if account.is_superadmin %}btn-outline-danger{% else %}btn-outline-primary{% endif %}">
+              {% if account.is_superadmin %}Remove superadmin{% else %}Make superadmin{% endif %}
+            </button>
+          </form>
+        {% endif %}
+      </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}
