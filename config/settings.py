@@ -138,6 +138,7 @@ MEDIA_ROOT = BASE_DIR / "media"
 LOGIN_URL = "accounts:login"
 LOGIN_REDIRECT_URL = "home"
 LOGOUT_REDIRECT_URL = "accounts:login"
+PRIVATE_MEDIA_ROOT = BASE_DIR / "private_media"
 
 # Makes Django's "error" messages use Bootstrap's "danger" alert colour.
 MESSAGE_TAGS = {message_constants.ERROR: "danger"}
