@@ -20,3 +20,12 @@ def is_member(user, community):
 def is_community_admin(user, community):
     membership = get_membership(user, community)
     return membership is not None and membership.role == Membership.Role.ADMIN
+
+
+def has_community_access(user, community):
+
+    if not user.is_authenticated:
+        return False
+    if user.is_superadmin:
+        return True
+    return is_member(user, community)
